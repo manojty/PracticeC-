@@ -6,7 +6,7 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            TestSelectionSort.runAllTests();
+            TestBubbleSort.runAllTests();
         }
     }
 }
