@@ -9,13 +9,8 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            //TestMergeSort.runAllTests();
-            List<string> sets = Mixed.generatePermutation("abcd");
-            foreach(string item in sets)
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine(sets.Count);
+            int result = Mixed.HowManyBsts(5);
+            Console.WriteLine(result);
         }
 
     }
