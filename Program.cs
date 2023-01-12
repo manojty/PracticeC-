@@ -9,8 +9,9 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            int result = Mixed.HowManyBsts(5);
-            Console.WriteLine(result);
+            Mixed.PlaceQueens(5);
+            Console.WriteLine();
+
         }
 
     }

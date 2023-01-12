@@ -13,6 +13,357 @@ namespace PracticeC_
 
         }
 
+    public static void PlaceQueens(int q)
+    {
+        List<List<int>> board = new List<List<int>>();
+        for(int i = 0; i < q; i++)
+        {
+            board.Add(new List<int>());
+            for(int j = 0; j < q; j++)
+            {
+                board[i].Add(0);
+            }
+        }
+
+        PrintQBoard(board);
+        
+        List<List<List<int>>> result = new List<List<List<int>>>();
+        
+        _GetAllPlacementForQueens(q, board, result);
+        
+        foreach(List<List<int>> item in result)
+        {
+            PrintQBoard(item);
+        }
+        Console.WriteLine("Total Solutions: " + result.Count);
+    } 
+    
+    public static List<List<int>> CloneBoard(List<List<int>> board)
+    {
+        List<List<int>> clone = new List<List<int>>();
+        for(int i = 0; i < board[0].Count; i++)
+        {
+            clone.Add(new List<int>());
+            for(int j = 0; j < board[0].Count; j++)
+            {
+                clone[i].Add(board[i][j]);
+            }
+        }
+        return clone;
+    }
+
+    public static void _GetAllPlacementForQueens(int q, List<List<int>> board, List<List<List<int>>> result)
+    {
+        if (q == 0)
+        {
+            result.Add(CloneBoard(board));
+        }
+        else
+        {
+            int placementRow = board[0].Count - q;
+            for(int col = 0; col < board[0].Count; col++)
+            {
+                if (IsValidPlacement(placementRow, col, board))
+                {
+                    board[placementRow][col] = placementRow + 1;
+                    _GetAllPlacementForQueens(q-1, board, result);
+                    board[placementRow][col] = 0;
+                }
+            }
+
+        }
+    }
+    
+    public static bool IsValidPlacement(int rowIndex, int colIndex, List<List<int>> board)
+    {
+        // Check for column
+        foreach(List<int> row in board)
+        {
+            if (row[colIndex] != 0) 
+            {
+                return false;
+            }
+        }
+
+/*        // Check for diagnal
+        int size = board[0].Count;
+        int topLeftRowIndex = rowIndex;
+        int topLeftColIndex = colIndex;
+
+        while (topLeftRowIndex >= 0 && topLeftColIndex >= 0)
+        {
+            if (board[topLeftRowIndex--][topLeftColIndex--] != 0)
+            {
+                return false;
+            }
+        }
+
+        int topRightRowIndex = rowIndex;
+        int topRightColIndex = colIndex;
+        while (topRightRowIndex >= 0 && topRightColIndex < size )
+        {
+            if (board[topRightRowIndex--][topRightColIndex++] != 0)
+            {
+                return false;
+            }
+        }
+
+        int bottomLeftRowIndex = rowIndex;
+        int bottomLeftColIndex = colIndex;
+
+        while (bottomLeftRowIndex < size && bottomLeftColIndex >= 0)
+        {
+            if (board[bottomLeftRowIndex++][bottomLeftColIndex--] != 0)
+            {
+                return false;
+            }
+        }
+
+        int bottomRightRowIndex = rowIndex;
+        int bottomRightColIndex = colIndex;
+        while (bottomRightRowIndex < size && bottomRightColIndex < size )
+        {
+            if (board[bottomRightRowIndex++][bottomRightColIndex++] != 0)
+            {
+                return false;
+            }
+        }
+*/
+        // Optimized Diagonal check.
+        for(int i = 0; i < rowIndex; i++)
+        {
+            for(int j = 0; j < board[0].Count; j++)
+            {
+                if ((board[i][j] != 0) && (Math.Abs(rowIndex -  i) == Math.Abs(colIndex - j)))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void PrintQBoard(List<List<int>> board)
+    {
+        foreach(List<int> row in board)
+        {
+            foreach(int item in row)
+            {
+                Console.Write(" " + item + " ");
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine("============================================");
+    }
+
+
+
+    public static int[,] sudoku = 
+    {
+        {8, 4, 9, 0, 0, 3, 5, 7, 0},
+        {0, 1, 0, 0, 0, 0, 0, 0, 0},
+        {7, 0, 0, 0, 9, 0, 0, 8, 3},
+        {0, 0, 0, 9, 4, 6, 7, 0, 0},
+        {0, 8, 0, 0, 5, 0, 0, 4, 0},
+        {0, 0, 6, 8, 7, 2, 0, 0, 0},
+        {5, 7, 0, 0, 1, 0, 0, 0, 4},
+        {0, 0, 0, 0, 0, 0, 0, 1, 0},
+        {0, 2, 1, 7, 0, 0, 8, 6, 5}
+    };
+    
+    public static bool SolveSudokuRecursive(int[,] sudoku)
+    {
+        // get next empty cell
+        KeyValuePair<int, int> nextEmptyCell = new KeyValuePair<int,int>(-1,-1);
+        for(int i=0; i < sudoku.GetLength(0); i++)
+        {
+            for(int j=0; j < sudoku.GetLength(1); j++)
+            {
+                if (sudoku[i,j] == 0)
+                {
+                    nextEmptyCell = new KeyValuePair<int,int>(i,j);
+                    break;
+                }
+            }
+            if (nextEmptyCell.Key != -1)
+            {
+                break;
+            }
+        }
+        // if no empty cell then we have a solution.
+        if (nextEmptyCell.Key == -1)
+        {
+            return true;
+        }
+
+        for(int num = 1; num<=9; num++)
+        {
+            if (CanIBePlacedAtThisCell(sudoku, num, nextEmptyCell))
+            {
+                sudoku[nextEmptyCell.Key, nextEmptyCell.Value] = num;
+                if (SolveSudokuRecursive(sudoku))
+                {
+                    return true;
+                }
+                else
+                {
+                    sudoku[nextEmptyCell.Key, nextEmptyCell.Value] = 0;
+                }
+            }
+        }
+        return false;
+    }
+    public static void _SolveSudoku(int[,] sudoku)
+    {
+        bool IsSudokuFilled = false;
+        while (!IsSudokuFilled)
+        {
+            // For each row get list of empty cells and possible values to be filled.
+            // For each value, if it can only find one empty cell where it can be placed then place it.
+            // Else move on to next row until there is no row with empty cells. Then exit the outer loop.
+            IsSudokuFilled = true;
+            for(int row = 0; row < sudoku.GetLength(0); row++)
+            {
+                List<KeyValuePair<int,int>> emptyCellsInRow = GetEmptyCellsOfRow(sudoku,row);
+                if (emptyCellsInRow.Count != 0)
+                {
+                    IsSudokuFilled = false;
+                }
+                List<int> missingValueInRow = GetMissingValuesInRow(sudoku, row);
+                foreach(int missingValue in missingValueInRow)
+                {
+                    int placingCounter = 0;
+                    KeyValuePair<int,int> placingCell = new KeyValuePair<int,int>();
+                    foreach(KeyValuePair<int,int> emptyCell in emptyCellsInRow)
+                    {
+                        if (CanIBePlacedAtThisCell(sudoku, missingValue, emptyCell))
+                        {
+                            placingCounter++;
+                            placingCell = emptyCell;
+                        }
+                            
+                    }
+                    if (placingCounter == 1)
+                    {
+                        sudoku[placingCell.Key, placingCell.Value] = missingValue;
+                    }
+                }
+            }
+
+        }
+
+    }
+    
+    public static void SolveSudoku(int[,] sudoku)
+    {
+        printCells(sudoku);
+        //Non recursive
+        //_SolveSudoku(sudoku);
+        SolveSudokuRecursive(sudoku);
+        printCells(sudoku);
+    }
+    
+    public static List<int> GetMissingValuesInRow(int[,] sudoku, int rowIndex)
+    {
+        List<int> missingValue = new List<int>(){1,2,3,4,5,6,7,8,9};
+
+        for(int col=0 ; col < sudoku.GetLength(1); col++)
+        {
+            missingValue.Remove(sudoku[rowIndex,col]);
+        }
+        return missingValue;
+    }
+
+    public static bool CanIBePlacedAtThisCell(int[,] sudoku, int num, KeyValuePair<int,int> cell)
+    {
+        // Check Row
+        for(int col = 0; col < sudoku.GetLength(1); col++)
+        {
+            if (sudoku[cell.Key,col] == num)
+            {
+                return false;
+            }
+        }
+
+        // Check Col
+        for(int row = 0; row < sudoku.GetLength(0); row++)
+        {
+            if (sudoku[row,cell.Value] == num)
+            {
+                return false;
+            }
+        }
+
+        // Check 3 X 3
+        // Get Starting Row and Col of the 3 X 3
+        int startingRow = 3*(cell.Key/3);
+        int startingCol = 3*(cell.Value/3);
+        for(int row = startingRow; row < startingRow + 3; row++)
+        {
+            for (int col = startingCol; col < startingCol + 3; col++)
+            {
+                if (sudoku[row,col] ==  num)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void printEmptyCells(int[,] sudoku)
+    {
+        for(int i = 0; i < sudoku.GetLength(0) ; i++)
+        {
+            
+            List<KeyValuePair<int,int>> result = GetEmptyCellsOfRow(sudoku, i);
+            foreach(KeyValuePair<int,int> item in result)
+            {
+                Console.Write(" " + item + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+    
+    public static void printCells(int[,] sudoku)
+    {
+        int rowSum = 0;
+        int[] colSum = new int[9];
+        for(int i = 0; i < sudoku.GetLength(0) ; i++)
+        {
+            rowSum = 0;
+            for(int j = 0; j < sudoku.GetLength(1); j++ )
+            {
+                rowSum += sudoku[i,j];
+                colSum[j] += sudoku[i,j];
+                Console.Write(" " + sudoku[i,j] + " ");
+            }
+            Console.Write("|| " + rowSum);
+            Console.WriteLine();
+        }
+        Console.WriteLine("====================================");
+        foreach(int item in colSum)
+        {
+            Console.Write(" " + item );
+        }
+        Console.WriteLine();
+        Console.WriteLine("-----------------------------------------------");
+
+    }
+    
+    public static List<KeyValuePair<int,int>> GetEmptyCellsOfRow(int[,] sudoku, int rowIndex)
+    {
+        List<KeyValuePair<int,int>> result = new List<KeyValuePair<int,int>>();
+        for(int i = 0; i <  sudoku.GetLength(1); i++)
+        {
+            if (sudoku[rowIndex,i] ==  0)
+            {
+                result.Add(new KeyValuePair<int,int>(rowIndex,i));
+            }
+        }
+        return result;
+    }
+    
     public static int HowManyBsts(int nodes)
     {
         int totalBst = 0;
