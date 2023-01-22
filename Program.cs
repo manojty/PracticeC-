@@ -9,7 +9,15 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            Mixed.PlaceQueens(5);
+            TreeNode root = Tree.GetBST();
+            Tree.PrintInOrder(root);
+            Console.WriteLine();
+            Tree.PrintPreOrder(root);
+            Console.WriteLine();
+            List<List<TreeNode>> levelNodeList = new List<List<TreeNode>>();
+            Tree.PrintLevelByLevel(root,levelNodeList);
+            int leftSpan = Tree.GetDiameter(root);
+            Tree.PrintTree(root);
             Console.WriteLine();
 
         }
