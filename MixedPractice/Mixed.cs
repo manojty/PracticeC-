@@ -13,6 +13,109 @@ namespace PracticeC_
 
         }
 
+        public static List<string> generate_all_expressions(string s, long target) 
+        {
+            // Write your code here.
+            List<string> result = new List<string>();
+            _generate_all_expressions(s, target, "", result);
+            return result;
+        }
+    
+        public static void _generate_all_expressions(string s, long target, string slate, List<string> result) 
+        {
+            // Write your code here.
+            // Base condition
+            if (s.Length == 0 )
+            {
+                if (target == getSlateValue(slate))
+                {
+                    result.Add(slate);
+                }
+            }
+            else
+            {
+                string joinSlate = slate + s[0];
+                _generate_all_expressions(s.Remove(0,1), target, joinSlate, result);
+                if (slate.Length !=0)
+                {
+                    string productSlate = slate + "*" + s[0] ; 
+                    _generate_all_expressions(s.Remove(0,1), target, productSlate, result);
+                    string additionSlate = slate + "+" + s[0] ;
+                    _generate_all_expressions(s.Remove(0,1), target, additionSlate, result);
+                }
+            }
+        }
+    
+    public static long getSlateValue(string slate)
+    {
+        if (slate.Length == 0)
+        {
+            return 0;
+        }
+
+        List<string> operandList = new List<string>();
+        List<string> operatorList = new List<string>();
+        string operand = new string("");
+        foreach(char c in slate)
+        {
+            if (c != '+' && c != '*')
+            {
+                operand += c;
+            }
+            else
+            {
+                operandList.Add(string.Copy(operand));
+                operand = "";
+                operatorList.Add(c.ToString());
+            }
+        } 
+        if (operand.Length != 0)
+        {
+            operandList.Add(string.Copy(operand));
+        }
+        List<string> postfixExpression = new List<string>();
+        postfixExpression.Add(operandList[0]);
+        int operandListIndex = 1;
+        foreach(string operatr in operatorList)
+        {
+            if (String.Equals(operatr,"*") && String.Equals(postfixExpression[postfixExpression.Count - 1],"+"))
+            {
+                postfixExpression[postfixExpression.Count - 1] = operandList[operandListIndex++];
+                postfixExpression.Add(operatr);
+                postfixExpression.Add("+");
+            }
+            else
+            {
+                postfixExpression.Add(operandList[operandListIndex++]);
+                postfixExpression.Add(operatr);
+            }
+        }
+        Stack<long> postfixEvaluator = new Stack<long>();
+        foreach(string str in postfixExpression)
+        {
+            if (String.Equals(str,"+") || String.Equals(str,"*"))
+            {
+                long operand1 = postfixEvaluator.Pop();
+                long operand2 = postfixEvaluator.Pop();
+                if (String.Equals(str,"+"))
+                {
+                    postfixEvaluator.Push(operand1 + operand2);
+                }
+                else
+                {
+                    postfixEvaluator.Push(operand1 * operand2);
+                }
+            }
+            else
+            {
+                postfixEvaluator.Push(long.Parse(str));
+            }
+        }
+        return postfixEvaluator.Pop();
+    }
+    
+    
+    
     public static void PlaceQueens(int q)
     {
         List<List<int>> board = new List<List<int>>();
