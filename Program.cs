@@ -9,7 +9,7 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            Mixed.PlaceQueens(5);
+            Mixed.TestCoupleTogether();
             Console.WriteLine();
 
         }

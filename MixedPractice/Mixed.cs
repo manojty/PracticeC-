@@ -703,6 +703,68 @@ namespace PracticeC_
             }
             return numbers;
         }
+        
+        public static void TestCoupleTogether()
+        {
+            List<int> partnerList = new List<int>{8,0,5,2,4,1,3,7,6,9};
+            int swaps = CoupleTogether(partnerList);
+        }
+        public static int CoupleTogether(List<int> partners)
+        {
+            int noOfSwaps = 0;
+            Dictionary<int,int> partnerLocation = new Dictionary<int,int>();
+            int location = 0;
+            foreach(int partner in partners)
+            {
+                partnerLocation.Add(partner, location++);
+            }
+
+            int noOfCouples = partners.Count/2;
+            for(int coupleCount = 0; coupleCount < noOfCouples; coupleCount++)
+            {
+                int leftPartner =  partners[2 * coupleCount];
+                int currentRightPartner = partners[2 * coupleCount + 1];
+                int actualRightPartner;
+                if (leftPartner % 2 == 0)
+                {
+                    actualRightPartner = leftPartner + 1;
+                }
+                else
+                {
+                    actualRightPartner = leftPartner - 1;
+                }
+                while (currentRightPartner != actualRightPartner)
+                {
+                    noOfSwaps++;
+                    int PartnerOfCurrentRightPartner = 0;
+                    if (currentRightPartner % 2 == 0)
+                    {
+                        PartnerOfCurrentRightPartner =  currentRightPartner + 1;
+                    }
+                    else
+                    {
+                        PartnerOfCurrentRightPartner =  currentRightPartner - 1;
+                    }
+                    int locationOfPartnerOfCurrentRightPartner = partnerLocation[PartnerOfCurrentRightPartner];
+                    int finalLocationofCurrentRightPartner = 0;
+                    if (locationOfPartnerOfCurrentRightPartner % 2 == 0)
+                    {
+                        finalLocationofCurrentRightPartner = locationOfPartnerOfCurrentRightPartner + 1;
+                    }
+                    else
+                    {
+                        finalLocationofCurrentRightPartner = locationOfPartnerOfCurrentRightPartner - 1;
+                    }
+                    // Take the current right partner to next to its actual partner.
+                    (partners[2 * coupleCount + 1], partners[finalLocationofCurrentRightPartner]) = (partners[finalLocationofCurrentRightPartner], partners[2 * coupleCount + 1]);
+                    // update the location of swapped partners
+                    partnerLocation[partners[2 * coupleCount + 1]] = 2 * coupleCount + 1;
+                    partnerLocation[currentRightPartner] = finalLocationofCurrentRightPartner;
+                    currentRightPartner = partners[2 * coupleCount + 1];
+                }
+            }
+            return noOfSwaps;
+        }
 
     }
 }
