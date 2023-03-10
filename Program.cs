@@ -9,7 +9,9 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            Mixed.TestCoupleTogether();
+            //TestTrie.testInsert();
+            TestTrie.testSearch();
+            
             Console.WriteLine();
 
         }
