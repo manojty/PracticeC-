@@ -10,8 +10,8 @@ namespace PracticeC_
         static void Main(string[] args)
         {
             //TestTrie.testInsert();
-            TestTrie.testSearch();
-            
+            //TestTrie.testSearch();
+            Mixed.TestDutchSort();
             Console.WriteLine();
 
         }

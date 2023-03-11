@@ -704,11 +704,49 @@ namespace PracticeC_
             return numbers;
         }
         
+        public static void TestDutchSort()
+        {
+            List<char> list = new List<char>{'B','G','R','G','R','B','G'};
+            List<char> list1 = new List<char>{'B','B','B','R','R','G','G'};
+            List<char> list2 = new List<char>{'B','G','R','B','G','R','B'};
+            DutchSort(list);
+            DutchSort(list1);
+            DutchSort(list2);
+        }        
+        
+        public static void DutchSort(List<char> list)
+        {
+            int redIndex = 0;
+            int greenIndex = 0;
+            int blueIndex = list.Count - 1;
+
+            while(greenIndex <= blueIndex)
+            {
+                if (list[greenIndex] == 'B')
+                {
+                    (list[greenIndex], list[blueIndex]) = (list[blueIndex], list[greenIndex]);
+                    blueIndex--;
+                }
+                else if (list[greenIndex] == 'R')
+                {
+                    (list[greenIndex], list[redIndex]) = (list[redIndex], list[greenIndex]);
+                    greenIndex++;
+                    redIndex++;
+                }
+                else
+                {
+                    greenIndex++;
+                }
+            }
+        }
+        
+        
         public static void TestCoupleTogether()
         {
             List<int> partnerList = new List<int>{8,0,5,2,4,1,3,7,6,9};
             int swaps = CoupleTogether(partnerList);
         }
+        
         public static int CoupleTogether(List<int> partners)
         {
             int noOfSwaps = 0;
