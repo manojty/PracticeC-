@@ -9,10 +9,7 @@ namespace PracticeC_
     {
         static void Main(string[] args)
         {
-            //TestTrie.testInsert();
-            //TestTrie.testSearch();
-            Mixed.TestDutchSort();
-            Console.WriteLine();
+            QSortTest.TestAll();
 
         }
 

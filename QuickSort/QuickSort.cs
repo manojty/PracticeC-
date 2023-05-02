@@ -33,7 +33,8 @@ class QuickSort
     {
         if (start < end)
         {
-            int partitionIndex = partition(arr, start, end);
+            //int partitionIndex = partition(arr, start, end);
+            int partitionIndex = GetPosition(arr, start, end);
             QSort(arr, start, partitionIndex - 1);
             QSort(arr, partitionIndex + 1, end);
         }
@@ -48,10 +49,45 @@ class QuickSort
         QSort(arr, 0, size - 1);
     }
 
+    public int GetPosition(int[] arr, int start, int end)
+    {
+        int num = arr[start];
+        while (start < end)
+        {
+            if (arr[start] < num)
+            {
+                start++;
+                continue;
+            }
+            if (arr[end] > num)
+            {
+                end--;
+                continue;
+            }
+            
+            (arr[start], arr[end]) = (arr[end], arr[start]);
+        }
+        return start;
+    }
+
 }
+
+
+
 
 class QSortTest
 {
+    public static void TestAll()
+    {
+        TestOddNumArray();
+        TestEvenNumArray();
+        TestUnsortedArray();
+        TestSortedArray();
+        TestSameArray();
+        TestDuplicateArray();
+        TestEdgeCaseArray();
+
+    }
     public static void TestOddNumArray()
     {
         int[] arr = {3,5,2,4,1};

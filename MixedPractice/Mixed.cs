@@ -704,6 +704,8 @@ namespace PracticeC_
             return numbers;
         }
         
+        
+        
         public static void TestDutchSort()
         {
             List<char> list = new List<char>{'B','G','R','G','R','B','G'};
