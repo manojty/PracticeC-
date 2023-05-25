@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace PracticeC_
 {
+    
     public class TreeNode
     {
         public TreeNode()
@@ -19,6 +20,10 @@ namespace PracticeC_
 
     public class Tree
     {
+        public Tree()
+        {
+
+        }
         public static void BuildBST(ref TreeNode root, int key)
         {
             if (root == null)
@@ -37,6 +42,64 @@ namespace PracticeC_
                 BuildBST(ref root.left, key);
             }
         }
+
+        public static bool IsTreeHeightBalanced(TreeNode root)
+        {
+            return IsTreeHeightBalanced1(root).isBalanced;
+            
+        }
+        public class TreeInfo
+        {
+            public bool isBalanced = false;
+            public int height = 0;
+        }
+        
+        public static TreeInfo IsTreeHeightBalanced1(TreeNode root)
+        {
+            if (root == null)
+            {
+                TreeInfo t = new TreeInfo();
+                t.isBalanced = true;
+                t.height = -1;
+                return t;
+            }
+
+            TreeInfo leftTreeInfo  = IsTreeHeightBalanced1(root.left );
+            if (!leftTreeInfo.isBalanced)
+            {
+                return leftTreeInfo;
+            }
+            TreeInfo rightTreeInfo = IsTreeHeightBalanced1(root.right);
+            if (!rightTreeInfo.isBalanced)
+            {
+                return rightTreeInfo;
+            }
+            
+            if (Math.Abs(leftTreeInfo.height - rightTreeInfo.height) <=1)
+            {
+                TreeInfo t = new TreeInfo();
+                t.isBalanced = true;
+                t.height = 1 + Math.Max(leftTreeInfo.height,rightTreeInfo.height);
+                return t;
+            }
+            else
+            {
+                TreeInfo t = new TreeInfo();
+                t.isBalanced = false;
+                t.height = 1 + Math.Max(leftTreeInfo.height,rightTreeInfo.height);
+                return t;
+            }
+        }
+
+        public static int height(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            return Math.Max((1 + height(root.left)), (1 + height(root.right)));
+        }
+
 
         public static void PrintInOrder(TreeNode root)
         {

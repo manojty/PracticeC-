@@ -6,13 +6,369 @@ using System.Collections;
 namespace PracticeC_
 {
 
+    public class CircularQ
+    {
+        public const int size = 8;
+        public int[] q = new int[size];
+        public int start = -1;
+        public int end = -1;
+        public int enqueue(int value)
+        {
+            if ((start == -1) && (end == -1))
+            {
+                start = 0;
+                end = 0;
+                q[end] =  value;
+            }
+            else if (((end + 1) % size) != start)
+            {
+                q[((end + 1) % size)] = value;
+                end = ((end + 1) % size);
+            }
+            else
+            {
+                Console.WriteLine("Queue is full");
+                return 0;
+            }
+            return 1;
+        }
+
+        public int dequeue()
+        {
+            if ((start == -1) && (end == -1))
+            {
+               Console.WriteLine("queue is empty");
+               return 0;
+            }
+
+            if (start != end)
+            {
+                int val = q[start];
+                q[start] = 0;
+                start = (start + 1) % size;
+                return val;
+            }
+            else
+            {
+                int val = q[start];
+                q[start] = 0;
+                start = -1;
+                end = -1;
+                return val;
+            }
+        }
+
+    }
+    
+    public class ListNode
+    {
+        public int item;
+        public ListNode next;
+    }
+
     public class Mixed
     {
-        public Mixed()
+
+        public static int CountNoOfGames(int totalScore, int score1, int score2, int score3, Dictionary<int,int> dict)
         {
 
         }
+        
+        
+        public static void TowerOfHanoi2(int rings, char from, char to, char use)
+        {
+            if (rings == 1)
+            {
+                Console.WriteLine("Move ring from " + from + " to " + to );
+                return;
+            }
+            TowerOfHanoi2(rings - 1, from, use, to);
+            Console.WriteLine("Move ring from " + from + " to " + to );
+            TowerOfHanoi2(rings -1 , use, to, from);
+        }
+    
+        public static int FindKth(List<int> list, int k)
+        {
+            int start = 0;
+            int end = list.Count - 1;
+            k = end - k + 1;
+            int kth = list[k];
+            while (true)
+            {
+                while (start < end)
+                {
+                    while (kth > list[start] && start < end)
+                    {
+                        start++;
+                    }
+                    while(kth < list[end] && start < end)
+                    {
+                        end--;
+                    }
+                    if (start < end)
+                    {
+                        (list[start], list[end]) = (list[end], list[start]);
+                    }
+                }
+                //start = start;
+                if (start == k)
+                {
+                    kth = list[k];
+                    break;
+                }
+                else if (start > k)
+                {
+                    end = start -1;
+                    start = 0;
+                    kth = list[k];
+                }
+                else
+                {
+                    end = k;
+                    kth = list[k];
+                }
+            }
+            return kth;        
+        }
 
+        public static ListNode mergeTwoLists(ListNode list1, ListNode list2)
+        {
+            ListNode head = null;
+
+            if (list1.item < list2.item)
+            {
+                head = list1;
+                list1 = list1.next;
+            }
+            else
+            {
+                head = list2;
+                list2 = list2.next;
+            }
+            
+            
+            ListNode currNode = head;
+
+            while (list1 != null && list2 !=null)
+            {
+                if (list1.item < list2.item)
+                {
+                    currNode.next =  list1;
+                    list1 = list1.next;
+                }
+                else
+                {
+                    currNode.next = list2;
+                    list2 = list2.next;
+                }
+                currNode = currNode.next;
+            }
+            if (list1 == null)
+            {
+                currNode.next =  list2;
+            }
+            else
+            {
+                currNode.next = list1;
+            }
+            return head;
+        }
+        
+        public static void transformArray(char[] arr, int size)
+        {
+            int noOfa = 0;
+            int noOfb = 0;
+            foreach(char c in arr)
+            {
+                if (c == 'a')
+                {
+                    noOfa++;
+                }
+                if (c == 'b')
+                {
+                    noOfb++;
+                }
+            }
+            int expandedIndex = (size - 1) + noOfa -  noOfb; 
+            for(int index =  size - 1; index >= 0; index--)
+            {
+                if (arr[index] == 'a')
+                {
+                    arr[expandedIndex--] = 'd';
+                    arr[expandedIndex--] = 'd';
+                }
+                else if (arr[index] != 'b')
+                {
+                    arr[expandedIndex--] =  arr[index];
+                }
+            }
+        }
+       
+        public static String convertBase(String str, int base1, int base2)
+        {
+            String result = "";
+            int base1Num = 0;
+            foreach(int digit in str)
+            {
+                base1Num = base1Num * base1 + digit - '0';
+            }
+            Console.WriteLine("Decimal representation of base1 number is " + base1Num);
+            while (base1Num != 0)
+            {
+                result = base1Num % base2 + result;
+                base1Num =  base1Num / base2;
+            }
+            return result;
+        }
+
+
+        public static int atoi(String str)
+        {
+            int res = 0;
+            foreach(char digit in str)
+            {
+                int num = digit - '0';
+                res = res*10 + num;
+            }
+            return res;
+        }
+        
+        public static String itoa(int num)
+        {
+            String str = "";
+            while (num != 0)
+            {
+                str = num % 10 + str;
+                num = num / 10;
+            }
+            return str;
+        }
+
+
+
+        public static void printSpiral(List<List<int>> mat, int startRow, int startCol, int size)
+        {
+
+            if (size == 1)
+            {
+                Console.Write(mat[startRow][startCol] + " ");
+                return;
+            }
+            
+            if (size == 0)
+            {
+                return;
+            }
+            // Print top row
+            for(int col = startCol; col < startCol + size - 1; col++)
+            {
+                Console.Write(mat[startRow][col] + " ");
+            }
+            // Print Right Column
+            for(int row = startRow; row < startRow + size - 1; row++)
+            {
+                Console.Write(mat[row][startCol + size -1] + " ");
+            }
+            // Print Bottom Row
+            for(int col = startCol + size - 1; col > startCol; col--)
+            {
+                Console.Write(mat[startRow + size - 1][col] + " ");
+            }
+            // Print Left Column
+            for(int row = startRow + size - 1; row > startRow; row--)
+            {
+                Console.Write(mat[row][startCol] + " ");
+            }
+
+            startRow++;
+            startCol++;
+            size = size - 2;
+
+            printSpiral(mat, startRow, startCol, size);
+
+        }
+        public static int buySell(List<int> lst)
+        {
+            int profit = 0;
+            int diff = 0;
+            int buyPrice =  lst[0];
+            foreach(int price in lst)
+            {
+                diff = price - buyPrice;
+                if (diff < 0)
+                {
+                    buyPrice = price;
+                }
+                else if (diff > profit)
+                {
+                    profit = diff;
+                    Console.WriteLine("Running profit: " + profit);
+                }
+            }
+            return profit;
+        }
+        
+        public static void dutch(List<int> lst, int pivot)
+        {
+            int smaller = 0;
+            int equal = 0;
+            //int current = 0;
+            int greater = lst.Count - 1;
+
+            while (equal <= greater)
+            {
+                if (lst[equal] == pivot)
+                {
+                    equal++;
+                }
+                else if (lst[equal] < pivot)
+                {
+                    (lst[smaller],lst[equal]) = (lst[equal],lst[smaller]);
+                    smaller++;
+                    equal++;
+                }
+                else
+                {
+                    (lst[equal],lst[greater]) = (lst[greater],lst[equal]);
+                    greater--;
+                }
+            }
+        }
+        
+        public static int pow(int x, int y)
+        {
+            
+            int multiple = x;
+            int result = 1;;
+            while (y != 0)
+            {
+                if ((y & 1) == 1)
+                {
+                    result *= multiple;
+                }
+                multiple *= multiple;
+                y = y>>1;
+            }
+            return result;
+        }
+
+
+        public static bool getParity(ulong num )
+        {
+            bool isParity = false;
+            ulong mask = 1;
+            while (mask != 0)
+            {
+                if ((num & mask) != 0)
+                {
+                    isParity =  !isParity;
+                }
+                mask = mask<<1;
+            }
+            return isParity;
+        }
+
+        
         public static List<string> generate_all_expressions(string s, long target) 
         {
             // Write your code here.
